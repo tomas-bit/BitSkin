@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SkinCompatCompoundButton">
+        <attr name="android:button" />
+        <attr name="buttonTint" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="BitBackground">
+        <attr name="android:background" />
+    </declare-styleable>
+
+    <declare-styleable name="BitImageView">
+        <attr name="android:src" />
+        <attr name="android:alpha" />
+    </declare-styleable>
+
+    <declare-styleable name="BitTextAppearance">
+        <attr name="android:text" />
+        <attr name="android:textSize" />
+        <attr name="android:textColorHint" />
+        <attr name="android:textColor" />
+        <attr name="android:textColorLink" />
+        <attr name="android:fontFamily" />
+        <attr name="android:drawableLeft" />
+        <attr name="android:drawableTop" />
+        <attr name="android:drawableRight" />
+        <attr name="android:drawableBottom" />
+        <attr name="android:drawableStart" />
+        <attr name="android:drawableEnd" />
+        <attr name="android:button" />
+        <attr name="android:buttonTint" />
+    </declare-styleable>
+
+    <declare-styleable name="BitProgressBar">
+        <attr name="android:indeterminateDrawable" />
+        <attr name="android:progressDrawable" />
+        <attr name="android:thumb" />
+    </declare-styleable>
+</resources>

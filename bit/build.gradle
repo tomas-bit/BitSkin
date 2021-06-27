@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+
+    compileSdkVersion 29
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+}
+
+
+task deleteOldJar(type: Delete) {
+    delete 'build/libs/skin_v1.0.0.jar'
+}
+
+task makeJar(type: Jar) {
+    baseName 'skin_v1.0.0'
+    from('build/intermediates/javac/debug/classes/')
+    into('')
+    exclude('com/ttys/skin/BuildConfig.class', 'com/ttys/skin/R.class')
+    exclude { it.name.startsWith('R$'); }
+}
+makeJar.dependsOn(deleteOldJar, build)

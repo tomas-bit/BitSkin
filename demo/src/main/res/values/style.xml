@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="button_style">
+        <item name="android:background">@color/color1</item>
+        <item name="android:textSize">@android:dimen/app_icon_size</item>
+        <item name="android:textColor">@color/write</item>
+        <item name="android:textColorLink">@color/color2</item>
+        <item name="android:text">"tttt"</item>
+    </style>
+
+    <style name="progress_style">
+        <item name="android:background">@color/color1</item>
+        <item name="android:progressDrawable">@color/write</item>
+        <item name="android:indeterminateDrawable">@color/color2</item>
+        <item name="android:thumb">@color/color1</item>
+    </style>
+
+    <style name="check_style">
+        <item name="android:buttonTint">@color/color1</item>
+        <item name="android:button">@color/write</item>
+    </style>
+
+    <style name="image_style">
+        <item name="android:src">@color/color1</item>
+        <item name="android:alpha">@color/write</item>
+    </style>
+</resources>
