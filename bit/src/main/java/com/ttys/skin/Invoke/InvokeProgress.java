@@ -78,12 +78,12 @@ class InvokeProgress implements Invoke.Callbacks {
                     if (a.hasValue(R.styleable.BitProgressBar_android_indeterminateDrawable)) {
                         int id = a.getResourceId(R.styleable.BitProgressBar_android_indeterminateDrawable, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_INDETERMINATEDRAWABLE_TYPE, itp, res);
+                        result = parse(view, SKIN_INDETERMINATEDRAWABLE_TYPE, itp, res) || result;
                     }
                     if (a.hasValue(R.styleable.BitProgressBar_android_thumb)) {
                         int id = a.getResourceId(R.styleable.BitProgressBar_android_thumb, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_THUMB_TYPE, itp, res);
+                        result = parse(view, SKIN_THUMB_TYPE, itp, res) || result;
                     }
                     a.recycle();
 
@@ -91,7 +91,7 @@ class InvokeProgress implements Invoke.Callbacks {
                     if (a1.hasValue(R.styleable.BitBackground_android_background)) {
                         int id = a1.getResourceId(R.styleable.BitBackground_android_background, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_BACKGROUND_TYPE, itp, res);
+                        result = parse(view, SKIN_BACKGROUND_TYPE, itp, res) || result;
                     }
                     a1.recycle();
                     return result;

@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -43,6 +44,46 @@ class InvokeText implements Invoke.Callbacks {
         try {
             Class<?> clazz = Class.forName("android.widget.TextView");
             switch (attrName) {
+                case SKIN_TEXTCOLOR_TYPE: {
+                    Method method = clazz.getDeclaredMethod("setTextColor", ColorStateList.class);
+                    ColorStateList colors = res.getColorStateList(ids);
+                    method.invoke(view, colors);
+                    return true;
+                }
+                case SKIN_TEXTCOLORHIGHLIGHT_TYPE: {
+                    Method method = clazz.getDeclaredMethod("setHighlightColor", Integer.TYPE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        method.invoke(view, res.getColor(ids, null));
+                    } else {
+                        method.invoke(view, res.getColor(ids));
+                    }
+                    return true;
+                }
+                case SKIN_TEXTCOLORHINT_TYPE: {
+                    Method method = clazz.getDeclaredMethod("setHintTextColor", ColorStateList.class);
+                    ColorStateList colors = res.getColorStateList(ids);
+                    method.invoke(view, colors);
+                    return true;
+                }
+                case SKIN_TEXTCOLORLINK_TYPE: {
+                    Method method = clazz.getDeclaredMethod("setLinkTextColor", ColorStateList.class);
+                    ColorStateList colors = res.getColorStateList(ids);
+                    method.invoke(view, colors);
+                    return true;
+                }
+                case SKIN_FONTFAMILY_TYPE: {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        Method method = clazz.getDeclaredMethod("setTypeface", Typeface.class);
+                        method.invoke(view, res.getFont(ids));
+                        return true;
+                    }
+                }
+                case SKIN_TEXTSIZE_TYPE: {
+                    Method method = clazz.getDeclaredMethod("setTextSize", Integer.TYPE, Float.TYPE);
+                    res.getDimension(ids);
+                    method.invoke(view, TypedValue.COMPLEX_UNIT_PX, res.getDimension(ids));
+                    return true;
+                }
                 case SKIN_TEXT_TYPE: {
                     Method method = clazz.getDeclaredMethod("setText", CharSequence.class);
                     method.invoke(view, res.getString(ids));
@@ -52,55 +93,6 @@ class InvokeText implements Invoke.Callbacks {
                     Method method = clazz.getDeclaredMethod("setHint", CharSequence.class);
                     method.invoke(view, res.getString(ids));
                     return true;
-                }
-                case SKIN_TEXTCOLOR_TYPE: {
-                    Method method = clazz.getDeclaredMethod("setTextColor", Integer.TYPE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        method.invoke(view, res.getColor(ids, view.getContext().getTheme()));
-                    } else {
-                        method.invoke(view, res.getColor(ids));
-                    }
-                    return true;
-                }
-                case SKIN_TEXTCOLORHIGHLIGHT_TYPE: {
-                    Method method = clazz.getDeclaredMethod("setHighlightColor", Integer.TYPE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        method.invoke(view, res.getColor(ids, view.getContext().getTheme()));
-                    } else {
-                        method.invoke(view, res.getColor(ids));
-                    }
-                    return true;
-                }
-                case SKIN_TEXTCOLORHINT_TYPE: {
-                    Method method = clazz.getDeclaredMethod("setHintTextColor", Integer.TYPE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        method.invoke(view, res.getColor(ids, view.getContext().getTheme()));
-                    } else {
-                        method.invoke(view, res.getColor(ids));
-                    }
-                    return true;
-                }
-                case SKIN_TEXTSIZE_TYPE: {
-                    Method method = clazz.getDeclaredMethod("setTextSize", Integer.TYPE, Float.TYPE);
-                    res.getDimension(ids);
-                    method.invoke(view, TypedValue.COMPLEX_UNIT_PX, res.getDimension(ids));
-                    return true;
-                }
-                case SKIN_TEXTCOLORLINK_TYPE: {
-                    Method method = clazz.getDeclaredMethod("setLinkTextColor", Integer.TYPE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        method.invoke(view, res.getColor(ids, view.getContext().getTheme()));
-                    } else {
-                        method.invoke(view, res.getColor(ids));
-                    }
-                    return true;
-                }
-                case SKIN_FONTFAMILY_TYPE: {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        Method method = clazz.getDeclaredMethod("setTypeface", Typeface.class);
-                        method.invoke(view, res.getFont(ids));
-                        return true;
-                    }
                 }
                 case SKIN_DRAWABLEBOTTOM_TYPE: {
                     Method method = clazz.getDeclaredMethod("setCompoundDrawablesWithIntrinsicBounds", Drawable.class,
@@ -183,57 +175,57 @@ class InvokeText implements Invoke.Callbacks {
                     if (a.hasValue(R.styleable.BitTextAppearance_android_textSize)) {
                         int id = a.getResourceId(R.styleable.BitTextAppearance_android_textSize, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = parse(view, SKIN_TEXTSIZE_TYPE, itp, res);
+                        result = parse(view, SKIN_TEXTSIZE_TYPE, itp, res) || result;
                     }
                     if (a.hasValue(R.styleable.BitTextAppearance_android_textColor)) {
                         int id = a.getResourceId(R.styleable.BitTextAppearance_android_textColor, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_TEXTCOLOR_TYPE, itp, res);
+                        result = parse(view, SKIN_TEXTCOLOR_TYPE, itp, res) || result;
                     }
                     if (a.hasValue(R.styleable.BitTextAppearance_android_textColorLink)) {
                         int id = a.getResourceId(R.styleable.BitTextAppearance_android_textColorLink, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_TEXTCOLORLINK_TYPE, itp, res);
+                        result = parse(view, SKIN_TEXTCOLORLINK_TYPE, itp, res) || result;
                     }
                     if (a.hasValue(R.styleable.BitTextAppearance_android_textColorHint)) {
                         int id = a.getResourceId(R.styleable.BitTextAppearance_android_textColorHint, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_TEXTCOLORHINT_TYPE, itp, res);
+                        result = parse(view, SKIN_TEXTCOLORHINT_TYPE, itp, res) || result;
                     }
                     if (a.hasValue(R.styleable.BitTextAppearance_android_fontFamily)) {
                         int id = a.getResourceId(R.styleable.BitTextAppearance_android_fontFamily, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_FONTFAMILY_TYPE, itp, res);
+                        result = parse(view, SKIN_FONTFAMILY_TYPE, itp, res) || result;
                     }
                     if (a.hasValue(R.styleable.BitTextAppearance_android_drawableTop)) {
                         int id = a.getResourceId(R.styleable.BitTextAppearance_android_drawableTop, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_DRAWABLETOP_TYPE, itp, res);
+                        result = parse(view, SKIN_DRAWABLETOP_TYPE, itp, res) || result;
                     }
                     if (a.hasValue(R.styleable.BitTextAppearance_android_drawableBottom)) {
                         int id = a.getResourceId(R.styleable.BitTextAppearance_android_drawableBottom, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_DRAWABLEBOTTOM_TYPE, itp, res);
+                        result = parse(view, SKIN_DRAWABLEBOTTOM_TYPE, itp, res) || result;
                     }
                     if (a.hasValue(R.styleable.BitTextAppearance_android_drawableLeft)) {
                         int id = a.getResourceId(R.styleable.BitTextAppearance_android_drawableLeft, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_DRAWABLELEFT_TYPE, itp, res);
+                        result = parse(view, SKIN_DRAWABLELEFT_TYPE, itp, res) || result;
                     }
                     if (a.hasValue(R.styleable.BitTextAppearance_android_drawableRight)) {
                         int id = a.getResourceId(R.styleable.BitTextAppearance_android_drawableRight, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_DRAWABLERIGHT_TYPE, itp, res);
+                        result = parse(view, SKIN_DRAWABLERIGHT_TYPE, itp, res) || result;
                     }
                     if (a.hasValue(R.styleable.BitTextAppearance_android_button)) {
                         int id = a.getResourceId(R.styleable.BitTextAppearance_android_button, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_BUTTON_TYPE, itp, res);
+                        result = parse(view, SKIN_BUTTON_TYPE, itp, res) || result;
                     }
                     if (a.hasValue(R.styleable.BitTextAppearance_android_buttonTint)) {
                         int id = a.getResourceId(R.styleable.BitTextAppearance_android_buttonTint, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_BUTTONHIT_TYPE, itp, res);
+                        result = parse(view, SKIN_BUTTONHIT_TYPE, itp, res) || result;
                     }
                     a.recycle();
 
@@ -241,7 +233,7 @@ class InvokeText implements Invoke.Callbacks {
                     if (a1.hasValue(R.styleable.BitBackground_android_background)) {
                         int id = a1.getResourceId(R.styleable.BitBackground_android_background, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_BACKGROUND_TYPE, itp, res);
+                        result = parse(view, SKIN_BACKGROUND_TYPE, itp, res) || result;
                     }
                     a1.recycle();
                     return result;

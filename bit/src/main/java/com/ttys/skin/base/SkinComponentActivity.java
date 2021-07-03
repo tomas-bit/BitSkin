@@ -51,7 +51,7 @@ public class SkinComponentActivity extends ComponentActivity{
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        SkinSource.getInstance().finish(this);
+        SkinSource.finish(this);
     }
 
 }

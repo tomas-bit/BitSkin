@@ -66,7 +66,7 @@ class InvokeImg implements Invoke.Callbacks {
                     if (a.hasValue(R.styleable.BitImageView_android_alpha)) {
                         int id = a.getResourceId(R.styleable.BitImageView_android_alpha, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_DRAWABLEALPHA_TYPE, itp, res);
+                        result = parse(view, SKIN_DRAWABLEALPHA_TYPE, itp, res) || result;
                     }
                     a.recycle();
 
@@ -74,7 +74,7 @@ class InvokeImg implements Invoke.Callbacks {
                     if (a1.hasValue(R.styleable.BitBackground_android_background)) {
                         int id = a1.getResourceId(R.styleable.BitBackground_android_background, INVALID_ID);
                         int itp = SkinSource.getInstance().getId(id);
-                        result = result || parse(view, SKIN_BACKGROUND_TYPE, itp, res);
+                        result = parse(view, SKIN_BACKGROUND_TYPE, itp, res) || result;
                     }
                     a1.recycle();
                     return result;

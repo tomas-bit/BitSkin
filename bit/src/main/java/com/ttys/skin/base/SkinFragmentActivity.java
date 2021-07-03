@@ -35,7 +35,6 @@ public class SkinFragmentActivity extends FragmentActivity {
 
     @Override
     protected void onDestroy() {
-        //SkinSource.getInstance().finish(this);
         super.onDestroy();
     }
 
@@ -47,6 +46,6 @@ public class SkinFragmentActivity extends FragmentActivity {
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        SkinSource.getInstance().finish(this);
+        SkinSource.finish(this);
     }
 }

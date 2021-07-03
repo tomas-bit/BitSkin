@@ -59,6 +59,7 @@ class SkinInflater implements LayoutInflater.Factory2 {
     public View onCreateView(@NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
         View view = getView(context, name, attrs);
         if (view == null) return null;
+        Log.d("TAG", "====================1=");
         parseContext(context, attrs, view);
         return view;
     }
@@ -82,7 +83,7 @@ class SkinInflater implements LayoutInflater.Factory2 {
                     String typeName = context.getResources().getResourceTypeName(id);
                     if (typeName.equals("id")) continue;
                     String entryName = context.getResources().getResourceEntryName(id);
-                    int ids = res.getIdentifier(entryName, typeName, Config.mPackname);
+                    int ids = mRes.getIdentifier(id, entryName, typeName, attrName);
                     if (ids <= 0) continue;
                     mInvoke.parse(view, attrName, ids, res, entryName, typeName);
                 } catch (Exception e) {
@@ -98,6 +99,7 @@ class SkinInflater implements LayoutInflater.Factory2 {
         View view = getView(context, name, attrs);
         if (view == null) return null;
         parseContext(context, attrs, view);
+        Log.d("TAG", "=====================");
         return view;
     }
 }

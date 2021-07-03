@@ -6,11 +6,11 @@ import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.ttys.skin.Invoke.Invoke;
 import com.ttys.skin.SkinCallBack;
 import com.ttys.skin.SkinStatus;
-
-import androidx.annotation.NonNull;
 
 import static com.ttys.skin.source.Config.mPackname;
 import static com.ttys.skin.source.Config.mPath;
@@ -21,10 +21,14 @@ import static com.ttys.skin.source.SkinAttr.SKIN_DRAWABLERIGHT_TYPE;
 import static com.ttys.skin.source.SkinAttr.SKIN_DRAWABLETOP_TYPE;
 import static com.ttys.skin.source.SkinAttr.SKIN_FONTFAMILY_TYPE;
 import static com.ttys.skin.source.SkinAttr.SKIN_FOREGROUND_TYPE;
+import static com.ttys.skin.source.SkinAttr.SKIN_PROGRESSDRAWABLE_TYPE;
 import static com.ttys.skin.source.SkinAttr.SKIN_SRC_TYPE;
+import static com.ttys.skin.source.SkinAttr.SKIN_STYLE_TYPEFACE_TYPE;
+import static com.ttys.skin.source.SkinAttr.SKIN_TEXTCOLORHINT_TYPE;
 import static com.ttys.skin.source.SkinAttr.SKIN_TEXTCOLOR_TYPE;
 import static com.ttys.skin.source.SkinAttr.SKIN_TEXTSIZE_TYPE;
 import static com.ttys.skin.source.SkinAttr.SKIN_TEXT_TYPE;
+import static com.ttys.skin.source.SkinAttr.SKIN_THUMB_TYPE;
 
 // tomas modify for skinsource
 public class SkinSource {
@@ -77,8 +81,8 @@ public class SkinSource {
         if (null != mHandle) mHandle.destroy();
     }
 
-    public void finish(Context context) {
-        if (null != mInvoke) mInvoke.finish(context);
+    public static void finish(Context context) {
+        if (null != getInstance().mInvoke) getInstance().mInvoke.finish(context);
     }
 
     public int getId(int ids) {
@@ -88,6 +92,14 @@ public class SkinSource {
             return mSource.getIdentifier(entry, name, mPackname);
         }
         return 0;
+    }
+
+    public int getIdentifier(int id, String name, String type, String attr) {//add
+        if (null == mSource || attr.equals(SKIN_STYLE_TYPEFACE_TYPE)) {
+            return id;
+        } else {
+            return mSource.getIdentifier(name, type, Config.mPackname);
+        }
     }
 
     protected LayoutInflater.Factory get() {
@@ -107,7 +119,6 @@ public class SkinSource {
     }
 
     public static void create(Context context) {
-        if (null == context) return;
         if (null == LayoutInflater.from(context).getFactory2()) {
             LayoutInflater.from(context).setFactory2(SkinInflater.getInstance());
         }
@@ -169,6 +180,11 @@ public class SkinSource {
             mInvoke.parseAuto(mContext, view, SKIN_TEXTCOLOR_TYPE, id, source());
     }
 
+    public void setTextColorHint(View view, int id) {
+        if (null != mInvoke)
+            mInvoke.parseAuto(mContext, view, SKIN_TEXTCOLORHINT_TYPE, id, source());
+    }
+
     public void setTextSize(View view, int id) {
         if (null != mInvoke)
             mInvoke.parseAuto(mContext, view, SKIN_TEXTSIZE_TYPE, id, source());
@@ -177,6 +193,21 @@ public class SkinSource {
     public void setFont(View view, int id) {
         if (null != mInvoke)
             mInvoke.parseAuto(mContext, view, SKIN_FONTFAMILY_TYPE, id, source());
+    }
+
+    public void setThumb(View view, int id) {
+        if (null != mInvoke)
+            mInvoke.parseAuto(mContext, view, SKIN_THUMB_TYPE, id, source());
+    }
+
+    public void setTrack(View view, int id) {
+        if (null != mInvoke)
+            mInvoke.parseAuto(mContext, view, SKIN_THUMB_TYPE, id, source());
+    }
+
+    public void setProgressDrawable(View view, int id) {
+        if (null != mInvoke)
+            mInvoke.parseAuto(mContext, view, SKIN_PROGRESSDRAWABLE_TYPE, id, source());
     }
 
     public void setCompoundDrawables(View view, int left, int top, int right, int bottom) {

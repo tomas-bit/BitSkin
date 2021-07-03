@@ -64,6 +64,6 @@ class SkinFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        SkinSource.getInstance().finish(getContext());
+        SkinSource.finish(getContext());
     }
 }

@@ -20,6 +20,7 @@ import java.util.List;
 import static com.ttys.skin.source.Config.mPackname;
 import static com.ttys.skin.source.SkinAttr.SKIN_BACKGROUND_TYPE;
 import static com.ttys.skin.source.SkinAttr.SKIN_FOREGROUND_TYPE;
+import static com.ttys.skin.source.SkinAttr.SKIN_STYLE_TYPEFACE_TYPE;
 
 //tomas modify for Invoke
 public class Invoke {
@@ -49,11 +50,15 @@ public class Invoke {
 
     public void parseAuto(Context context, View view, String attr, int id, Resources res) {
         if (null != view && null != res && null != context) {
-            final String entry = context.getResources().getResourceEntryName(id);
-            final String name = context.getResources().getResourceTypeName(id);
-            if (ifNeed(view, entry, attr)) return;
-            final int ids = res.getIdentifier(entry, name, mPackname);
-            if (ids > 0) parse(view, attr, ids, res, entry, name);
+            try {
+                final String entry = context.getResources().getResourceEntryName(id);
+                final String name = context.getResources().getResourceTypeName(id);
+                if (ifNeed(view, entry, attr)) return;
+                final int ids = res.getIdentifier(entry, name, mPackname);
+                if (ids > 0) parse(view, attr, ids, res, entry, name);
+            } catch (Exception e) {
+                ifNeed(view, "", attr);
+            }
         }
     }
 
@@ -78,7 +83,7 @@ public class Invoke {
     public void parse(View view, String attrName, int ids, Resources res, String entry, String type) {
         final boolean result = getParse(view, attrName, ids, res, entry, type);
         if (result) {
-            final Bean bean = new Bean(view, attrName, entry, type);
+            final Bean bean = new Bean(view, ids, attrName, entry, type);
             if (null == view.getTag(TYPE)) view.setTag(TYPE, bean);
             attrs.add(bean);
             attachStateChange(view);
@@ -107,8 +112,8 @@ public class Invoke {
 
     private boolean ifNeed(View view, String name, String attr) {
         for (Bean bean : attrs) {
-            if (view == bean.mView && name.equals(bean.mEntry)) {
-                if (attr.equals(bean.mName)) return true;
+            if (view == bean.mView && attr.equals(bean.mName)) {
+                //if (name.equals(bean.mEntry)) return true;
                 attrs.remove(bean);
                 break;
             }
@@ -151,7 +156,12 @@ public class Invoke {
     public void updateSkin(Resources res, SkinCallBack callBack) {
         for (Bean bean : attrs) {
             if (!isValue(bean)) continue;
-            int ids = res.getIdentifier(bean.mEntry, bean.mType, mPackname);
+            final int ids;
+            if (bean.mName.equals(SKIN_STYLE_TYPEFACE_TYPE)) {
+                ids = bean.mId;
+            } else {
+                ids = res.getIdentifier(bean.mEntry, bean.mType, mPackname);
+            }
             if (ids == 0) continue;
             final boolean result = getParse(bean.mView, bean.mName, ids, res, bean.mEntry, bean.mType);
             if (callBack != null) {
